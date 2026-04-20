@@ -78,6 +78,12 @@ resource "aws_instance" "main" {
     volume_type = "gp3"
   }
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+  }
+
   user_data = module.docker_host.cloud_init_config
 
   tags = {
@@ -89,6 +95,21 @@ resource "aws_instance" "main" {
   lifecycle {
     ignore_changes = [user_data, ami]
   }
+}
+
+resource "aws_eip" "main" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "${var.project}-${var.environment}-docker-host"
+    Project     = var.project
+    Environment = var.environment
+  }
+}
+
+resource "aws_eip_association" "main" {
+  instance_id   = aws_instance.main.id
+  allocation_id = aws_eip.main.id
 }
 
 resource "aws_ebs_volume" "data" {

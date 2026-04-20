@@ -7,7 +7,7 @@ resource "aws_route53_record" "apex" {
   name    = var.domain
   type    = "A"
   ttl     = 300
-  records = [aws_instance.main.public_ip]
+  records = [aws_eip.main.public_ip]
 }
 
 resource "aws_route53_record" "wildcard" {
@@ -15,5 +15,5 @@ resource "aws_route53_record" "wildcard" {
   name    = "*.${var.domain}"
   type    = "A"
   ttl     = 300
-  records = [aws_instance.main.public_ip]
+  records = [aws_eip.main.public_ip]
 }

@@ -66,6 +66,11 @@ resource "aws_iam_role_policy" "ecr" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.instance.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 resource "aws_iam_instance_profile" "main" {
   name = "${var.project}-${var.environment}-docker-host"
   role = aws_iam_role.instance.name
