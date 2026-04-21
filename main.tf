@@ -4,7 +4,7 @@ resource "random_password" "dynamic_user" {
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/1.0.1"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/1.0.3"
 
   domain                      = var.domain
   acme_email                  = var.acme_email
@@ -86,6 +86,17 @@ resource "aws_instance" "main" {
     http_put_response_hop_limit = 2
   }
 
+  dynamic "instance_market_options" {
+    for_each = var.use_spot ? [1] : []
+    content {
+      market_type = "spot"
+      spot_options {
+        instance_interruption_behavior = "stop"
+        spot_instance_type             = "persistent"
+      }
+    }
+  }
+
   user_data = module.docker_host.cloud_init_config
 
   tags = {
@@ -115,7 +126,7 @@ resource "aws_eip_association" "main" {
 }
 
 resource "aws_ebs_volume" "data" {
-  availability_zone = aws_instance.main.availability_zone
+  availability_zone = data.aws_subnet.selected.availability_zone
   size              = var.data_volume_size
   type              = "gp3"
 

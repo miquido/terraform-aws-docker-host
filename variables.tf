@@ -89,3 +89,9 @@ variable "ecr_registry_url" {
   type        = string
   default     = ""
 }
+
+variable "use_spot" {
+  description = "Use EC2 Spot instance (persistent, stop on interruption). Reduces cost ~70% for dev environments."
+  type        = bool
+  default     = false
+}
