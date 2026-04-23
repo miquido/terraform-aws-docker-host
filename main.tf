@@ -23,7 +23,6 @@ module "docker_host" {
   block_device                = "/dev/xvdf"
   walg_env_vars = {
     AWS_REGION              = var.region
-    WALG_S3_PREFIX          = "s3://${aws_s3_bucket.walg.bucket}/"
     WALG_COMPRESSION_METHOD = "lz4"
     PGHOST                  = "/var/run/postgresql"
   }
