@@ -95,3 +95,9 @@ variable "use_spot" {
   type        = bool
   default     = false
 }
+
+variable "walg_backup_retention_days" {
+  description = "Number of days to retain WAL-G backups in S3 before automatic deletion."
+  type        = number
+  default     = 30
+}
