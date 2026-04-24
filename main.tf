@@ -21,6 +21,7 @@ module "docker_host" {
   registry_url                = var.ecr_registry_url
   use_ecr_credential_helper   = var.ecr_registry_url != ""
   block_device                = "/dev/xvdf"
+  cloudwatch_logs_region = var.region
   walg_env_vars = {
     AWS_REGION              = var.region
     WALG_COMPRESSION_METHOD = "lz4"
