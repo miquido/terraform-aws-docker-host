@@ -101,3 +101,9 @@ variable "walg_backup_retention_days" {
   type        = number
   default     = 30
 }
+
+variable "cloudwatch_log_retention_days" {
+  description = "Number of days to retain CloudWatch logs."
+  type        = number
+  default     = 30
+}
