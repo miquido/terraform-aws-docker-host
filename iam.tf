@@ -91,8 +91,8 @@ resource "aws_iam_role_policy" "walg" {
   })
 }
 
-resource "aws_iam_role_policy" "cloudwatch_logs" {
-  name = "cloudwatch-logs"
+resource "aws_iam_role_policy" "cloudwatch" {
+  name = "cloudwatch"
   role = aws_iam_role.instance.id
 
   policy = jsonencode({
@@ -111,6 +111,11 @@ resource "aws_iam_role_policy" "cloudwatch_logs" {
       {
         Effect   = "Allow"
         Action   = ["logs:DescribeLogGroups"]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["cloudwatch:PutMetricData"]
         Resource = "*"
       },
     ]

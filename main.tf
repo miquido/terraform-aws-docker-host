@@ -4,7 +4,7 @@ resource "random_password" "dynamic_user" {
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/1.2.0"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/1.2.1"
 
   domain                      = var.domain
   acme_email                  = var.acme_email
@@ -21,8 +21,9 @@ module "docker_host" {
   registry_url                = var.ecr_registry_url
   use_ecr_credential_helper   = var.ecr_registry_url != ""
   block_device                = "/dev/xvdf"
-  cloudwatch_logs_region      = var.region
+  cloudwatch_region           = var.enable_metrics ? var.region : ""
   docker_prune_schedule       = var.docker_prune_schedule
+  ssh_public_keys             = var.ssh_public_keys
   walg_env_vars = {
     AWS_REGION              = var.region
     WALG_COMPRESSION_METHOD = "lz4"
@@ -77,7 +78,6 @@ data "aws_subnet" "selected" {
 resource "aws_instance" "main" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
-  key_name               = var.key_name
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [aws_security_group.main.id]
   iam_instance_profile   = aws_iam_instance_profile.main.name

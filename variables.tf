@@ -20,9 +20,10 @@ variable "instance_type" {
   default = "t3.small"
 }
 
-variable "key_name" {
-  description = "EC2 key pair name for SSH access"
-  type        = string
+variable "ssh_public_keys" {
+  description = "List of SSH public keys added to the dynamic user's authorized_keys on the EC2 instance."
+  type        = list(string)
+  default     = []
 }
 
 variable "subnet_id" {
@@ -112,4 +113,10 @@ variable "cloudwatch_log_retention_days" {
   description = "Number of days to retain CloudWatch logs."
   type        = number
   default     = 30
+}
+
+variable "enable_metrics" {
+  description = "Enable CloudWatch Agent Prometheus scraping for Traefik metrics."
+  type        = bool
+  default     = true
 }
