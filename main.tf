@@ -4,12 +4,12 @@ resource "random_password" "dynamic_user" {
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/1.2.1"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/v1.0.0"
 
-  domain                      = var.domain
-  acme_email                  = var.acme_email
-  dns_challenge_provider      = "route53"
-  dns_challenge_env           = {
+  domain                 = var.domain
+  acme_email             = var.acme_email
+  dns_challenge_provider = "route53"
+  dns_challenge_env = {
     AWS_REGION = var.region
   }
   oidc_jwks_url               = var.oidc_jwks_url

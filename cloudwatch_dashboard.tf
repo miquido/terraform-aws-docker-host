@@ -11,11 +11,11 @@ resource "aws_cloudwatch_dashboard" "traefik" {
         width  = 24
         height = 9
         properties = {
-          title   = "Requests per service"
-          view    = "timeSeries"
-          region  = var.region
-          period  = 300
-          stat    = "Sum"
+          title  = "Requests per service"
+          view   = "timeSeries"
+          region = var.region
+          period = 300
+          stat   = "Sum"
           metrics = [
             [{ expression = "SELECT SUM(traefik_service_requests_total) FROM SCHEMA(\"ContainerInsights/Prometheus\", service, code) GROUP BY service", id = "q1" }]
           ]
@@ -29,11 +29,11 @@ resource "aws_cloudwatch_dashboard" "traefik" {
         width  = 12
         height = 10
         properties = {
-          title   = "Total requests per router — ranking"
-          view    = "table"
-          region  = var.region
-          period  = 86400
-          stat    = "Sum"
+          title  = "Total requests per router — ranking"
+          view   = "table"
+          region = var.region
+          period = 86400
+          stat   = "Sum"
           metrics = [
             [{ expression = "SELECT SUM(traefik_router_requests_total) FROM SCHEMA(\"ContainerInsights/Prometheus\", router) GROUP BY router ORDER BY SUM() DESC LIMIT 20", id = "q2" }]
           ]
