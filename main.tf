@@ -4,7 +4,7 @@ resource "random_password" "dynamic_user" {
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/v1.0.0"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=v1.4.2"
 
   domain                 = var.domain
   acme_email             = var.acme_email
