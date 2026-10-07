@@ -122,7 +122,7 @@ variable "enable_metrics" {
 }
 
 variable "enable_registry" {
-  description = "Run the built-in docker registry on the host (registry.<domain>). Pair it with registry_htpasswd, since it has no authentication of its own."
+  description = "Run the built-in docker registry on the host (registry.<domain>). Requires registry_htpasswd on AWS: the host is reachable from the internet. ECR (ecr_registry_url) is the default recommendation."
   type        = bool
   default     = false
 }

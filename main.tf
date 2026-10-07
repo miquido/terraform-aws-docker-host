@@ -173,6 +173,13 @@ resource "aws_instance" "main" {
 
   lifecycle {
     ignore_changes = [user_data, user_data_base64, ami]
+
+    # The security group opens 443 to the internet, so a built-in registry without authentication
+    # would let anyone push images that the docker-compose-runner then pulls and runs.
+    precondition {
+      condition     = !var.enable_registry || var.registry_htpasswd != ""
+      error_message = "enable_registry on an internet-facing host requires registry_htpasswd (plus registry_username and registry_password). Prefer ECR (ecr_registry_url) unless you need a registry on the host."
+    }
   }
 }
 

@@ -93,7 +93,7 @@ module "docker_host" {
 | <a name="input_domain"></a> [domain](#input\_domain) | Base domain (e.g. dmc.example.com). Wildcard cert will be issued for *.domain. | `string` | n/a | yes |
 | <a name="input_ecr_registry_url"></a> [ecr\_registry\_url](#input\_ecr\_registry\_url) | ECR registry URL (e.g. 123456789.dkr.ecr.us-east-1.amazonaws.com). Leave empty to skip ECR setup. | `string` | `""` | no |
 | <a name="input_enable_metrics"></a> [enable\_metrics](#input\_enable\_metrics) | Ship Docker logs to CloudWatch Logs (awslogs driver) and Traefik metrics through the CloudWatch Agent. | `bool` | `true` | no |
-| <a name="input_enable_registry"></a> [enable\_registry](#input\_enable\_registry) | Run the built-in docker registry on the host (registry.<domain>). Pair it with registry\_htpasswd, since it has no authentication of its own. | `bool` | `false` | no |
+| <a name="input_enable_registry"></a> [enable\_registry](#input\_enable\_registry) | Run the built-in docker registry on the host (registry.<domain>). Requires registry\_htpasswd on AWS: the host is reachable from the internet. ECR (ecr\_registry\_url) is the default recommendation. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | n/a | `string` | `"t3.small"` | no |
 | <a name="input_ip_allowlist"></a> [ip\_allowlist](#input\_ip\_allowlist) | CIDR range allowed to access the docker-compose-runner endpoint | `string` | n/a | yes |
