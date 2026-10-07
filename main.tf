@@ -1,10 +1,62 @@
-resource "random_password" "dynamic_user" {
-  length  = 24
-  special = false
+locals {
+  cloudwatch_enabled = var.enable_metrics
+
+  # Docker log driver: ship every container's stdout to CloudWatch Logs. Written before Docker
+  # starts (cloud-init write_files runs ahead of runcmd), so no daemon restart is needed.
+  docker_daemon_json = jsonencode({
+    "log-driver" = "awslogs"
+    "log-opts" = {
+      "awslogs-region"       = var.region
+      "awslogs-group"        = "/docker/${var.domain}"
+      "awslogs-create-group" = "false"
+      "tag"                  = "{{.Name}}"
+    }
+  })
+
+  cloudwatch_write_files = [
+    {
+      path    = "/etc/docker/daemon.json"
+      content = local.docker_daemon_json
+    },
+    {
+      path    = "/etc/docker-host/cwagent-config.json"
+      content = templatefile("${path.module}/templates/cloudwatch-agent-config.json.tftpl", { domain = var.domain })
+    },
+    {
+      path    = "/etc/docker-host/prometheus.yaml"
+      content = <<-EOT
+        global:
+          scrape_interval: 60s
+          scrape_timeout: 10s
+        scrape_configs:
+          - job_name: traefik
+            static_configs:
+              - targets: ['traefik:8080']
+            metrics_path: /metrics
+      EOT
+    },
+  ]
+
+  # Scrapes Traefik's Prometheus endpoint and ships it as CloudWatch EMF metrics.
+  cloudwatch_agent_service = <<-EOT
+    cloudwatch-agent:
+      image: amazon/cloudwatch-agent:latest
+      environment:
+        AWS_REGION: ${var.region}
+      volumes:
+        - /etc/docker-host/cwagent-config.json:/etc/cwagentconfig/cwagent-config.json:ro
+        - /etc/docker-host/prometheus.yaml:/etc/cwagent/prometheus.yaml:ro
+      restart: unless-stopped
+      networks:
+        - traefik-net
+  EOT
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=tags/v1.0.0"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=v2.0.0"
+
+  vm_user      = "ubuntu"
+  block_device = "/dev/xvdf"
 
   domain                 = var.domain
   acme_email             = var.acme_email
@@ -14,14 +66,15 @@ module "docker_host" {
   }
   oidc_jwks_url               = var.oidc_jwks_url
   oidc_audience               = var.oidc_audience
-  oidc_expected_subs          = join(",", var.oidc_expected_subs)
+  oidc_expected_subs          = var.oidc_expected_subs
   ip_allowlist                = var.ip_allowlist
   docker_compose_runner_image = var.docker_compose_runner_image
-  passwd_hash                 = bcrypt(random_password.dynamic_user.result)
   registry_url                = var.ecr_registry_url
+  enable_registry             = var.enable_registry
+  registry_htpasswd           = var.registry_htpasswd
+  registry_username           = var.registry_username
+  registry_password           = var.registry_password
   use_ecr_credential_helper   = var.ecr_registry_url != ""
-  block_device                = "/dev/xvdf"
-  cloudwatch_region           = var.enable_metrics ? var.region : ""
   docker_prune_schedule       = var.docker_prune_schedule
   ssh_public_keys             = var.ssh_public_keys
   walg_env_vars = {
@@ -29,6 +82,10 @@ module "docker_host" {
     WALG_COMPRESSION_METHOD = "lz4"
     PGHOST                  = "/var/run/postgresql"
   }
+
+  enable_traefik_metrics = local.cloudwatch_enabled
+  extra_write_files      = local.cloudwatch_enabled ? local.cloudwatch_write_files : []
+  extra_compose_services = local.cloudwatch_enabled ? local.cloudwatch_agent_service : ""
 }
 
 resource "aws_security_group" "main" {
@@ -104,7 +161,9 @@ resource "aws_instance" "main" {
     }
   }
 
-  user_data = module.docker_host.cloud_init_config
+  # gzip: the rendered cloud-init is larger than EC2's 16 KB user-data limit as plain text;
+  # cloud-init unpacks gzip user data by itself.
+  user_data_base64 = base64gzip(module.docker_host.cloud_init_config)
 
   tags = {
     Name        = "${var.project}-${var.environment}-docker-host"
@@ -113,7 +172,7 @@ resource "aws_instance" "main" {
   }
 
   lifecycle {
-    ignore_changes = [user_data, ami]
+    ignore_changes = [user_data, user_data_base64, ami]
   }
 }
 

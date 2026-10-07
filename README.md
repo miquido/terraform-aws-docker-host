@@ -41,20 +41,18 @@ module "docker_host" {
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.0 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 6.51.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.9.0 |
 
 ## Modules
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_docker_host"></a> [docker\_host](#module\_docker\_host) | git::https://github.com/miquido/terraform-docker-host.git | tags/v1.0.0 |
+| <a name="module_docker_host"></a> [docker\_host](#module\_docker\_host) | git::https://github.com/miquido/terraform-docker-host.git | v2.0.0 |
 
 ## Resources
 
@@ -81,7 +79,6 @@ module "docker_host" {
 | [aws_s3_bucket_server_side_encryption_configuration.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_security_group.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_volume_attachment.data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/volume_attachment) | resource |
-| [random_password.dynamic_user](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 
 ## Inputs
 
@@ -91,11 +88,12 @@ module "docker_host" {
 | <a name="input_ami_id"></a> [ami\_id](#input\_ami\_id) | Ubuntu 22.04 LTS AMI ID (region-specific) | `string` | n/a | yes |
 | <a name="input_cloudwatch_log_retention_days"></a> [cloudwatch\_log\_retention\_days](#input\_cloudwatch\_log\_retention\_days) | Number of days to retain CloudWatch logs. | `number` | `30` | no |
 | <a name="input_data_volume_size"></a> [data\_volume\_size](#input\_data\_volume\_size) | n/a | `number` | `20` | no |
-| <a name="input_docker_compose_runner_image"></a> [docker\_compose\_runner\_image](#input\_docker\_compose\_runner\_image) | n/a | `string` | `"miquido/gitlab-docker-compose-host:172950-746ccb39"` | no |
+| <a name="input_docker_compose_runner_image"></a> [docker\_compose\_runner\_image](#input\_docker\_compose\_runner\_image) | n/a | `string` | `"ghcr.io/miquido/gitlab-docker-compose-host:v1.4.0"` | no |
 | <a name="input_docker_prune_schedule"></a> [docker\_prune\_schedule](#input\_docker\_prune\_schedule) | Cron schedule for Docker image pruning via Ofelia. Set to empty string to disable. | `string` | `"0 3 * * *"` | no |
 | <a name="input_domain"></a> [domain](#input\_domain) | Base domain (e.g. dmc.example.com). Wildcard cert will be issued for *.domain. | `string` | n/a | yes |
 | <a name="input_ecr_registry_url"></a> [ecr\_registry\_url](#input\_ecr\_registry\_url) | ECR registry URL (e.g. 123456789.dkr.ecr.us-east-1.amazonaws.com). Leave empty to skip ECR setup. | `string` | `""` | no |
-| <a name="input_enable_metrics"></a> [enable\_metrics](#input\_enable\_metrics) | Enable CloudWatch Agent Prometheus scraping for Traefik metrics. | `bool` | `true` | no |
+| <a name="input_enable_metrics"></a> [enable\_metrics](#input\_enable\_metrics) | Ship Docker logs to CloudWatch Logs (awslogs driver) and Traefik metrics through the CloudWatch Agent. | `bool` | `true` | no |
+| <a name="input_enable_registry"></a> [enable\_registry](#input\_enable\_registry) | Run the built-in docker registry on the host (registry.<domain>). Pair it with registry\_htpasswd, since it has no authentication of its own. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | n/a | yes |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | n/a | `string` | `"t3.small"` | no |
 | <a name="input_ip_allowlist"></a> [ip\_allowlist](#input\_ip\_allowlist) | CIDR range allowed to access the docker-compose-runner endpoint | `string` | n/a | yes |
@@ -104,10 +102,13 @@ module "docker_host" {
 | <a name="input_oidc_jwks_url"></a> [oidc\_jwks\_url](#input\_oidc\_jwks\_url) | JWKS URL for docker-compose-runner OIDC authentication | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
+| <a name="input_registry_htpasswd"></a> [registry\_htpasswd](#input\_registry\_htpasswd) | htpasswd entries (bcrypt, comma-separated for several users) protecting the built-in registry. | `string` | `""` | no |
+| <a name="input_registry_password"></a> [registry\_password](#input\_registry\_password) | Password for registry\_username. | `string` | `""` | no |
+| <a name="input_registry_username"></a> [registry\_username](#input\_registry\_username) | User the host logs in to the built-in registry with (must be one of registry\_htpasswd's). | `string` | `""` | no |
 | <a name="input_root_volume_size"></a> [root\_volume\_size](#input\_root\_volume\_size) | n/a | `number` | `20` | no |
 | <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | Route53 hosted zone ID for the domain | `string` | n/a | yes |
 | <a name="input_ssh_ip_range"></a> [ssh\_ip\_range](#input\_ssh\_ip\_range) | CIDR allowed SSH access | `string` | n/a | yes |
-| <a name="input_ssh_public_keys"></a> [ssh\_public\_keys](#input\_ssh\_public\_keys) | List of SSH public keys added to the dynamic user's authorized\_keys on the EC2 instance. | `list(string)` | `[]` | no |
+| <a name="input_ssh_public_keys"></a> [ssh\_public\_keys](#input\_ssh\_public\_keys) | List of SSH public keys added to the ubuntu user's authorized\_keys on the EC2 instance. | `list(string)` | `[]` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | n/a | `string` | n/a | yes |
 | <a name="input_use_spot"></a> [use\_spot](#input\_use\_spot) | Use EC2 Spot instance (persistent, stop on interruption). Reduces cost ~70% for dev environments. | `bool` | `false` | no |
 | <a name="input_walg_backup_retention_days"></a> [walg\_backup\_retention\_days](#input\_walg\_backup\_retention\_days) | Number of days to retain WAL-G backups in S3 before automatic deletion. | `number` | `30` | no |

@@ -21,7 +21,7 @@ variable "instance_type" {
 }
 
 variable "ssh_public_keys" {
-  description = "List of SSH public keys added to the dynamic user's authorized_keys on the EC2 instance."
+  description = "List of SSH public keys added to the ubuntu user's authorized_keys on the EC2 instance."
   type        = list(string)
   default     = []
 }
@@ -82,7 +82,7 @@ variable "ip_allowlist" {
 
 variable "docker_compose_runner_image" {
   type    = string
-  default = "miquido/gitlab-docker-compose-host:172950-746ccb39"
+  default = "ghcr.io/miquido/gitlab-docker-compose-host:v1.4.0"
 }
 
 variable "ecr_registry_url" {
@@ -116,7 +116,33 @@ variable "cloudwatch_log_retention_days" {
 }
 
 variable "enable_metrics" {
-  description = "Enable CloudWatch Agent Prometheus scraping for Traefik metrics."
+  description = "Ship Docker logs to CloudWatch Logs (awslogs driver) and Traefik metrics through the CloudWatch Agent."
   type        = bool
   default     = true
+}
+
+variable "enable_registry" {
+  description = "Run the built-in docker registry on the host (registry.<domain>). Pair it with registry_htpasswd, since it has no authentication of its own."
+  type        = bool
+  default     = false
+}
+
+variable "registry_htpasswd" {
+  description = "htpasswd entries (bcrypt, comma-separated for several users) protecting the built-in registry."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "registry_username" {
+  description = "User the host logs in to the built-in registry with (must be one of registry_htpasswd's)."
+  type        = string
+  default     = ""
+}
+
+variable "registry_password" {
+  description = "Password for registry_username."
+  type        = string
+  sensitive   = true
+  default     = ""
 }
