@@ -122,26 +122,26 @@ variable "enable_metrics" {
 }
 
 variable "enable_registry" {
-  description = "Run the built-in docker registry on the host (registry.<domain>). Requires registry_htpasswd on AWS: the host is reachable from the internet. ECR (ecr_registry_url) is the default recommendation."
+  description = "Run a docker registry on the host (registry.<domain>) instead of ECR, protected with basic auth. Credentials are generated unless registry_username/registry_password/registry_htpasswd are given; read them from the registry_* outputs."
   type        = bool
   default     = false
 }
 
 variable "registry_htpasswd" {
-  description = "htpasswd entries (bcrypt, comma-separated for several users) protecting the built-in registry."
+  description = "Override: htpasswd entries (bcrypt, comma-separated) for the built-in registry. Default: one entry for registry_username with a generated password."
   type        = string
   sensitive   = true
   default     = ""
 }
 
 variable "registry_username" {
-  description = "User the host logs in to the built-in registry with (must be one of registry_htpasswd's)."
+  description = "Override: user of the built-in registry (and the one the host logs in with). Default: ci."
   type        = string
   default     = ""
 }
 
 variable "registry_password" {
-  description = "Password for registry_username."
+  description = "Override: password for registry_username. Default: generated (see the registry_password output)."
   type        = string
   sensitive   = true
   default     = ""

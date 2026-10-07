@@ -1,4 +1,10 @@
 locals {
+  # Built-in registry: basic auth with generated credentials unless they are given. The host is
+  # reachable from the internet, so the registry never runs without authentication here.
+  registry_username = var.registry_username != "" ? var.registry_username : "ci"
+  registry_password = var.enable_registry ? (var.registry_password != "" ? var.registry_password : random_password.registry[0].result) : ""
+  registry_htpasswd = var.enable_registry ? (var.registry_htpasswd != "" ? var.registry_htpasswd : "${local.registry_username}:${bcrypt(local.registry_password)}") : ""
+
   cloudwatch_enabled = var.enable_metrics
 
   # Docker log driver: ship every container's stdout to CloudWatch Logs. Written before Docker
@@ -71,9 +77,9 @@ module "docker_host" {
   docker_compose_runner_image = var.docker_compose_runner_image
   registry_url                = var.ecr_registry_url
   enable_registry             = var.enable_registry
-  registry_htpasswd           = var.registry_htpasswd
-  registry_username           = var.registry_username
-  registry_password           = var.registry_password
+  registry_htpasswd           = local.registry_htpasswd
+  registry_username           = local.registry_username
+  registry_password           = local.registry_password
   use_ecr_credential_helper   = var.ecr_registry_url != ""
   docker_prune_schedule       = var.docker_prune_schedule
   ssh_public_keys             = var.ssh_public_keys
@@ -173,13 +179,6 @@ resource "aws_instance" "main" {
 
   lifecycle {
     ignore_changes = [user_data, user_data_base64, ami]
-
-    # The security group opens 443 to the internet, so a built-in registry without authentication
-    # would let anyone push images that the docker-compose-runner then pulls and runs.
-    precondition {
-      condition     = !var.enable_registry || var.registry_htpasswd != ""
-      error_message = "enable_registry on an internet-facing host requires registry_htpasswd (plus registry_username and registry_password). Prefer ECR (ecr_registry_url) unless you need a registry on the host."
-    }
   }
 }
 
@@ -214,4 +213,10 @@ resource "aws_volume_attachment" "data" {
   device_name = "/dev/xvdf"
   volume_id   = aws_ebs_volume.data.id
   instance_id = aws_instance.main.id
+}
+
+resource "random_password" "registry" {
+  count   = var.enable_registry && var.registry_password == "" ? 1 : 0
+  length  = 32
+  special = false
 }
