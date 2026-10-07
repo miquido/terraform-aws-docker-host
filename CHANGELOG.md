@@ -1,3 +1,10 @@
+## [2.0.1](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.0.0...v2.0.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* use docker-host v2.0.1 (fresh boots no longer abort in write_files) ([de80975](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/de809755dafd8eb69dcc37593de3ccbcb4553fa2))
+
 # [2.0.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v1.3.1...v2.0.0) (2026-10-07)
 
 
