@@ -40,7 +40,7 @@ locals {
   # Scrapes Traefik's Prometheus endpoint and ships it as CloudWatch EMF metrics.
   cloudwatch_agent_service = <<-EOT
     cloudwatch-agent:
-      image: amazon/cloudwatch-agent:latest
+      image: amazon/cloudwatch-agent:1.300073.0b1828
       environment:
         AWS_REGION: ${var.region}
       volumes:
