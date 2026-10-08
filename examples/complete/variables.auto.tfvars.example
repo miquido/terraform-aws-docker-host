@@ -1,0 +1,17 @@
+# Copy to variables.auto.tfvars (git-ignored) and fill in; terraform picks it up automatically.
+aws_profile = "my-profile" # or remove to use the default credential chain
+region      = "eu-central-1"
+
+domain     = "dmc.example.com"
+acme_email = "devops@example.com"
+
+# route53_zone_id = "Z0123456789ABC"   # optional: use an existing, already delegated zone
+
+allowed_cidr = "203.0.113.0/24"
+
+oidc_jwks_url      = "https://gitlab.example.com/oauth/discovery/keys"
+oidc_audience      = "https://gitlab.example.com"
+oidc_expected_subs = ["project_path:my-group/**"]
+
+# ssh_public_keys = ["ssh-ed25519 AAAA..."]
+# enable_registry = false   # use ECR instead (set ecr_registry_url on the module)
