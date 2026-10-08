@@ -25,6 +25,12 @@ variable "domain" {
   type        = string
 }
 
+variable "route53_zone_id" {
+  description = "Optional: ID of an existing Route53 zone for the domain (already delegated). null = the example creates the zone and prints its nameservers."
+  type        = string
+  default     = null
+}
+
 variable "acme_email" {
   description = "Email for Let's Encrypt registration."
   type        = string

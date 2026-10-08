@@ -41,7 +41,12 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# The wrapper creates the A records in an existing zone; the example creates the zone too.
+# The module creates the A records in an existing zone; unless route53_zone_id is given, the example creates it.
 resource "aws_route53_zone" "main" {
-  name = var.domain
+  count = var.route53_zone_id == null ? 1 : 0
+  name  = var.domain
+}
+
+locals {
+  zone_id = var.route53_zone_id != null ? var.route53_zone_id : aws_route53_zone.main[0].zone_id
 }

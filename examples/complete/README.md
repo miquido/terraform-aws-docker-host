@@ -1,7 +1,8 @@
 # Example: a Docker host on AWS
 
 Everything needed to run `terraform-aws-docker-host` from scratch: a minimal network (one public subnet), a
-Route53 zone for the domain, and the module itself. Fill in `variables.auto.tfvars` and apply.
+Route53 zone for the domain, and the module itself. Fill in `variables.auto.tfvars` and apply. If the domain's zone already exists and is delegated, pass its id as
+`route53_zone_id` and the example will not create one.
 
 ```bash
 cp variables.auto.tfvars.example variables.auto.tfvars   # edit: domain, acme_email, allowed_cidr, OIDC settings
@@ -9,7 +10,8 @@ terraform init
 terraform apply
 ```
 
-The apply prints `nameservers`: **delegate the domain to them** (NS records in its parent zone). Until the
+The apply prints `public_ip` (the Elastic IP; the module creates the A records for the domain and its wildcard
+pointing to it) and, when the example created the zone, `nameservers`: **delegate the domain to them** (NS records in its parent zone). Until the
 delegation is in place Traefik cannot issue the wildcard certificate (DNS-01) and the host is reachable only with a
 default certificate.
 
