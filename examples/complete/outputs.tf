@@ -4,8 +4,8 @@ output "public_ip" {
 }
 
 output "nameservers" {
-  description = "When the example created the zone: delegate the domain to these (NS records in the parent zone) so the wildcard certificate can be issued. Empty when route53_zone_id was given."
-  value       = one(aws_route53_zone.main[*].name_servers)
+  description = "Delegate the domain to these (NS records in the parent zone) so the wildcard certificate can be issued."
+  value       = aws_route53_zone.main.name_servers
 }
 
 output "registry_url" {

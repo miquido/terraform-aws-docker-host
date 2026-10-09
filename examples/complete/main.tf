@@ -17,7 +17,7 @@ module "docker_host" {
 
   domain          = var.domain
   acme_email      = var.acme_email
-  route53_zone_id = local.zone_id
+  route53_zone_id = aws_route53_zone.main.zone_id
 
   ssh_ip_range       = var.allowed_cidr
   ip_allowlist       = var.allowed_cidr
