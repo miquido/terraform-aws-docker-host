@@ -35,7 +35,9 @@ curl -s -o /dev/null -w '%{http_code}\n' https://registry.<domain>/v2/    # 401 
 
 Deployments reach the host through `https://docker.<domain>/run-compose` with an OIDC token from the issuer
 configured in `oidc_*`; the CI side is described in the `docker-host` core README. On the host,
-`pitr-restore <compose project> "<time>"` restores a Postgres database from its WAL-G backup.
+`pitr-marker <compose project> <name>` takes a restore point before a risky change and
+`pitr-restore <compose project> marker:<name>` (or `"<time>"`) restores a Postgres database from its WAL-G backup;
+`pitr-restore-mysql <container> marker:<name>` does the same for MySQL.
 
 ## Notes
 
