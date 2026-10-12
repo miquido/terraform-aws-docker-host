@@ -59,7 +59,7 @@ locals {
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=v2.0.1"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=v2.1.0"
 
   vm_user      = "ubuntu"
   block_device = "/dev/xvdf"
