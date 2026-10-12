@@ -1,3 +1,10 @@
+# [2.1.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.0.1...v2.1.0) (2026-10-12)
+
+
+### Features
+
+* docker-host 2.1.0 (pitr-marker for Postgres and MySQL on the host) ([9391e09](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/9391e09d8d9809b172fd246e9dd85031d6048113))
+
 ## [2.0.1](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.0.0...v2.0.1) (2026-10-07)
 
 
