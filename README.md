@@ -90,6 +90,7 @@ module "docker_host" {
 | <a name="input_acme_email"></a> [acme\_email](#input\_acme\_email) | Email for Let's Encrypt ACME registration | `string` | n/a | yes |
 | <a name="input_ami_id"></a> [ami\_id](#input\_ami\_id) | Ubuntu 22.04 LTS AMI ID (region-specific) | `string` | n/a | yes |
 | <a name="input_cloudwatch_log_retention_days"></a> [cloudwatch\_log\_retention\_days](#input\_cloudwatch\_log\_retention\_days) | Number of days to retain CloudWatch logs. | `number` | `30` | no |
+| <a name="input_create_apex_record"></a> [create\_apex\_record](#input\_create\_apex\_record) | Create the A record for the apex of domain. Set to false to leave the apex pointing elsewhere (e.g. while migrating a live hostname onto this host: test it via /etc/hosts, then switch the record). The wildcard record, and with it docker.<domain>, is always created. | `bool` | `true` | no |
 | <a name="input_data_volume_size"></a> [data\_volume\_size](#input\_data\_volume\_size) | n/a | `number` | `20` | no |
 | <a name="input_docker_compose_runner_image"></a> [docker\_compose\_runner\_image](#input\_docker\_compose\_runner\_image) | n/a | `string` | `"ghcr.io/miquido/gitlab-docker-compose-host:v1.4.0"` | no |
 | <a name="input_docker_prune_schedule"></a> [docker\_prune\_schedule](#input\_docker\_prune\_schedule) | Cron schedule for Docker image pruning via Ofelia. Set to empty string to disable. | `string` | `"0 3 * * *"` | no |
@@ -103,6 +104,7 @@ module "docker_host" {
 | <a name="input_oidc_audience"></a> [oidc\_audience](#input\_oidc\_audience) | Expected OIDC audience for docker-compose-runner | `string` | n/a | yes |
 | <a name="input_oidc_expected_subs"></a> [oidc\_expected\_subs](#input\_oidc\_expected\_subs) | List of expected OIDC subjects for docker-compose-runner | `list(string)` | n/a | yes |
 | <a name="input_oidc_jwks_url"></a> [oidc\_jwks\_url](#input\_oidc\_jwks\_url) | JWKS URL for docker-compose-runner OIDC authentication | `string` | n/a | yes |
+| <a name="input_postgres_ingress_cidr_blocks"></a> [postgres\_ingress\_cidr\_blocks](#input\_postgres\_ingress\_cidr\_blocks) | CIDR blocks allowed to reach port 5432 (Traefik's TLS-routed Postgres entrypoint). Set to [] when no Postgres is published through Traefik. | `list(string)` | <pre>[<br/>  "0.0.0.0/0"<br/>]</pre> | no |
 | <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
 | <a name="input_registry_htpasswd"></a> [registry\_htpasswd](#input\_registry\_htpasswd) | Override: htpasswd entries (bcrypt, comma-separated) for the built-in registry. Default: one entry for registry\_username with a generated password. | `string` | `""` | no |

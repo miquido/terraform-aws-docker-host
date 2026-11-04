@@ -146,3 +146,15 @@ variable "registry_password" {
   sensitive   = true
   default     = ""
 }
+
+variable "create_apex_record" {
+  description = "Create the A record for the apex of domain. Set to false to leave the apex pointing elsewhere (e.g. while migrating a live hostname onto this host: test it via /etc/hosts, then switch the record). The wildcard record, and with it docker.<domain>, is always created."
+  type        = bool
+  default     = true
+}
+
+variable "postgres_ingress_cidr_blocks" {
+  description = "CIDR blocks allowed to reach port 5432 (Traefik's TLS-routed Postgres entrypoint). Set to [] when no Postgres is published through Traefik."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
