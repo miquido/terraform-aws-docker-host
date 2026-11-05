@@ -1,3 +1,10 @@
+# [2.3.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.2.0...v2.3.0) (2026-11-05)
+
+
+### Features
+
+* version the WAL-G bucket ([36e36e4](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/36e36e47ad76c54e648d52d297548820ce3cfceb))
+
 # [2.2.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.1.0...v2.2.0) (2026-11-05)
 
 
