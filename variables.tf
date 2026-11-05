@@ -158,3 +158,27 @@ variable "postgres_ingress_cidr_blocks" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
+
+variable "enable_ebs_snapshots" {
+  description = "Take daily EBS snapshots of the data volume with Data Lifecycle Manager."
+  type        = bool
+  default     = true
+}
+
+variable "ebs_snapshot_retention_count" {
+  description = "Number of daily data volume snapshots to keep."
+  type        = number
+  default     = 14
+}
+
+variable "ebs_snapshot_time" {
+  description = "UTC time (HH:MM) of the daily data volume snapshot."
+  type        = string
+  default     = "23:45"
+}
+
+variable "data_volume_snapshot_id" {
+  description = "Snapshot to create the data volume from, e.g. to restore after losing the host. Only read when the volume is created (`tofu apply -replace=...aws_ebs_volume.data`); changing it on an existing volume does nothing."
+  type        = string
+  default     = null
+}

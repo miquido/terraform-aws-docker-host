@@ -28,3 +28,8 @@ output "registry_password" {
   value       = local.registry_password
   sensitive   = true
 }
+
+output "data_volume_id" {
+  description = "ID of the EBS data volume"
+  value       = aws_ebs_volume.data.id
+}

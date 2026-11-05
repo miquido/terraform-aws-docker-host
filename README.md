@@ -62,12 +62,15 @@ module "docker_host" {
 | ---- | ---- |
 | [aws_cloudwatch_dashboard.traefik](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard) | resource |
 | [aws_cloudwatch_log_group.docker](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_dlm_lifecycle_policy.data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dlm_lifecycle_policy) | resource |
 | [aws_ebs_volume.data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ebs_volume) | resource |
 | [aws_eip.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_eip_association.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip_association) | resource |
 | [aws_iam_instance_profile.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_role.dlm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.dlm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.ecr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.route53_acme](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
@@ -92,10 +95,14 @@ module "docker_host" {
 | <a name="input_cloudwatch_log_retention_days"></a> [cloudwatch\_log\_retention\_days](#input\_cloudwatch\_log\_retention\_days) | Number of days to retain CloudWatch logs. | `number` | `30` | no |
 | <a name="input_create_apex_record"></a> [create\_apex\_record](#input\_create\_apex\_record) | Create the A record for the apex of domain. Set to false to leave the apex pointing elsewhere (e.g. while migrating a live hostname onto this host: test it via /etc/hosts, then switch the record). The wildcard record, and with it docker.<domain>, is always created. | `bool` | `true` | no |
 | <a name="input_data_volume_size"></a> [data\_volume\_size](#input\_data\_volume\_size) | n/a | `number` | `20` | no |
+| <a name="input_data_volume_snapshot_id"></a> [data\_volume\_snapshot\_id](#input\_data\_volume\_snapshot\_id) | Snapshot to create the data volume from, e.g. to restore after losing the host. Only read when the volume is created (`tofu apply -replace=...aws_ebs_volume.data`); changing it on an existing volume does nothing. | `string` | `null` | no |
 | <a name="input_docker_compose_runner_image"></a> [docker\_compose\_runner\_image](#input\_docker\_compose\_runner\_image) | n/a | `string` | `"ghcr.io/miquido/gitlab-docker-compose-host:v1.4.0"` | no |
 | <a name="input_docker_prune_schedule"></a> [docker\_prune\_schedule](#input\_docker\_prune\_schedule) | Cron schedule for Docker image pruning via Ofelia. Set to empty string to disable. | `string` | `"0 3 * * *"` | no |
 | <a name="input_domain"></a> [domain](#input\_domain) | Base domain (e.g. dmc.example.com). Wildcard cert will be issued for *.domain. | `string` | n/a | yes |
+| <a name="input_ebs_snapshot_retention_count"></a> [ebs\_snapshot\_retention\_count](#input\_ebs\_snapshot\_retention\_count) | Number of daily data volume snapshots to keep. | `number` | `14` | no |
+| <a name="input_ebs_snapshot_time"></a> [ebs\_snapshot\_time](#input\_ebs\_snapshot\_time) | UTC time (HH:MM) of the daily data volume snapshot. | `string` | `"23:45"` | no |
 | <a name="input_ecr_registry_url"></a> [ecr\_registry\_url](#input\_ecr\_registry\_url) | ECR registry URL (e.g. 123456789.dkr.ecr.us-east-1.amazonaws.com). Leave empty to skip ECR setup. | `string` | `""` | no |
+| <a name="input_enable_ebs_snapshots"></a> [enable\_ebs\_snapshots](#input\_enable\_ebs\_snapshots) | Take daily EBS snapshots of the data volume with Data Lifecycle Manager. | `bool` | `true` | no |
 | <a name="input_enable_metrics"></a> [enable\_metrics](#input\_enable\_metrics) | Ship Docker logs to CloudWatch Logs (awslogs driver) and Traefik metrics through the CloudWatch Agent. | `bool` | `true` | no |
 | <a name="input_enable_registry"></a> [enable\_registry](#input\_enable\_registry) | Run a docker registry on the host (registry.<domain>) instead of ECR, protected with basic auth. Credentials are generated unless registry\_username/registry\_password/registry\_htpasswd are given; read them from the registry\_* outputs. | `bool` | `false` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | n/a | `string` | n/a | yes |
@@ -122,6 +129,7 @@ module "docker_host" {
 
 | Name | Description |
 | ---- | ----------- |
+| <a name="output_data_volume_id"></a> [data\_volume\_id](#output\_data\_volume\_id) | ID of the EBS data volume |
 | <a name="output_domain"></a> [domain](#output\_domain) | Base domain |
 | <a name="output_public_ip"></a> [public\_ip](#output\_public\_ip) | Elastic IP address of the instance |
 | <a name="output_registry_password"></a> [registry\_password](#output\_registry\_password) | Password of the built-in registry (generated unless registry\_password was given) |
