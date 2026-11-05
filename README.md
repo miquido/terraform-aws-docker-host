@@ -82,6 +82,7 @@ module "docker_host" {
 | [aws_s3_bucket_lifecycle_configuration.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
 | [aws_s3_bucket_public_access_block.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [aws_s3_bucket_versioning.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [aws_security_group.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_volume_attachment.data](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/volume_attachment) | resource |
 | [random_password.registry](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
@@ -124,6 +125,8 @@ module "docker_host" {
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | n/a | `string` | n/a | yes |
 | <a name="input_use_spot"></a> [use\_spot](#input\_use\_spot) | Use EC2 Spot instance (persistent, stop on interruption). Reduces cost ~70% for dev environments. | `bool` | `false` | no |
 | <a name="input_walg_backup_retention_days"></a> [walg\_backup\_retention\_days](#input\_walg\_backup\_retention\_days) | Number of days to retain WAL-G backups in S3 before automatic deletion. | `number` | `30` | no |
+| <a name="input_walg_bucket_versioning"></a> [walg\_bucket\_versioning](#input\_walg\_bucket\_versioning) | Keep object versions in the WAL-G bucket, so an overwritten or deleted backup/WAL object can be recovered for walg\_noncurrent\_version\_retention\_days. | `bool` | `true` | no |
+| <a name="input_walg_noncurrent_version_retention_days"></a> [walg\_noncurrent\_version\_retention\_days](#input\_walg\_noncurrent\_version\_retention\_days) | Days to keep noncurrent versions (overwritten or deleted objects) of the WAL-G bucket. Only has an effect with walg\_bucket\_versioning. | `number` | `14` | no |
 
 ## Outputs
 
