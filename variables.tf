@@ -82,7 +82,7 @@ variable "ip_allowlist" {
 
 variable "docker_compose_runner_image" {
   type    = string
-  default = "ghcr.io/miquido/gitlab-docker-compose-host:v1.4.0"
+  default = "ghcr.io/miquido/gitlab-docker-compose-host:v1.4.2"
 }
 
 variable "ecr_registry_url" {
@@ -145,4 +145,40 @@ variable "registry_password" {
   type        = string
   sensitive   = true
   default     = ""
+}
+
+variable "create_apex_record" {
+  description = "Create the A record for the apex of domain. Set to false to leave the apex pointing elsewhere (e.g. while migrating a live hostname onto this host: test it via /etc/hosts, then switch the record). The wildcard record, and with it docker.<domain>, is always created."
+  type        = bool
+  default     = true
+}
+
+variable "postgres_ingress_cidr_blocks" {
+  description = "CIDR blocks allowed to reach port 5432 (Traefik's TLS-routed Postgres entrypoint). Set to [] when no Postgres is published through Traefik."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "enable_ebs_snapshots" {
+  description = "Take daily EBS snapshots of the data volume with Data Lifecycle Manager."
+  type        = bool
+  default     = true
+}
+
+variable "ebs_snapshot_retention_count" {
+  description = "Number of daily data volume snapshots to keep."
+  type        = number
+  default     = 14
+}
+
+variable "ebs_snapshot_time" {
+  description = "UTC time (HH:MM) of the daily data volume snapshot."
+  type        = string
+  default     = "23:45"
+}
+
+variable "data_volume_snapshot_id" {
+  description = "Snapshot to create the data volume from, e.g. to restore after losing the host. Only read when the volume is created (`tofu apply -replace=...aws_ebs_volume.data`); changing it on an existing volume does nothing."
+  type        = string
+  default     = null
 }

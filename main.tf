@@ -119,11 +119,14 @@ resource "aws_security_group" "main" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = length(var.postgres_ingress_cidr_blocks) > 0 ? [1] : []
+    content {
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      cidr_blocks = var.postgres_ingress_cidr_blocks
+    }
   }
 
   egress {
@@ -201,11 +204,19 @@ resource "aws_ebs_volume" "data" {
   availability_zone = data.aws_subnet.selected.availability_zone
   size              = var.data_volume_size
   type              = "gp3"
+  snapshot_id       = var.data_volume_snapshot_id
 
   tags = {
-    Name        = "${var.project}-${var.environment}-data"
-    Project     = var.project
-    Environment = var.environment
+    Name             = "${var.project}-${var.environment}-data"
+    Project          = var.project
+    Environment      = var.environment
+    DockerHostBackup = "${var.project}-${var.environment}"
+  }
+
+  lifecycle {
+    # Only used when the volume is (re)created, e.g. `tofu apply -replace` onto a snapshot; without
+    # this, clearing the variable afterwards would replace the volume again.
+    ignore_changes = [snapshot_id]
   }
 }
 
