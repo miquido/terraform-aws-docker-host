@@ -1,3 +1,16 @@
+# [2.2.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.1.0...v2.2.0) (2026-11-05)
+
+
+### Bug Fixes
+
+* default docker-compose-runner image v1.4.2 ([4dba575](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/4dba57562062359809a8ff9cc6fc6994a74e994d))
+
+
+### Features
+
+* daily EBS snapshots of the data volume and restore from a snapshot ([5b935fa](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/5b935fa34a4d198fc46d47983d3e0c96d816d6f0))
+* optional apex record and configurable Postgres ingress ([2f33ff8](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/2f33ff87a4addff7526353fcf0c1292c20b92366))
+
 # [2.1.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.0.1...v2.1.0) (2026-10-12)
 
 
