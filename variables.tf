@@ -182,3 +182,15 @@ variable "data_volume_snapshot_id" {
   type        = string
   default     = null
 }
+
+variable "walg_bucket_versioning" {
+  description = "Keep object versions in the WAL-G bucket, so an overwritten or deleted backup/WAL object can be recovered for walg_noncurrent_version_retention_days."
+  type        = bool
+  default     = true
+}
+
+variable "walg_noncurrent_version_retention_days" {
+  description = "Days to keep noncurrent versions (overwritten or deleted objects) of the WAL-G bucket. Only has an effect with walg_bucket_versioning."
+  type        = number
+  default     = 14
+}
