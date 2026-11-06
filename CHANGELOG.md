@@ -1,3 +1,10 @@
+# [2.5.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.4.0...v2.5.0) (2026-11-06)
+
+
+### Features
+
+* swap file on first boot (swap_size_gb, swappiness) ([b868292](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/b868292ce41b2519db8b13a4c1605cbf07837bb5))
+
 # [2.4.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.3.0...v2.4.0) (2026-11-06)
 
 
