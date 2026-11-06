@@ -194,3 +194,9 @@ variable "walg_noncurrent_version_retention_days" {
   type        = number
   default     = 14
 }
+
+variable "enable_autoheal" {
+  description = "Run willfarrell/autoheal (multi-arch, runs on Graviton), which restarts containers that Docker reports as `unhealthy`. Opt-in per container: only those with the label `autoheal=true` and a HEALTHCHECK are touched, so enabling it changes nothing until a project labels a container. It mounts the Docker socket, like the runner."
+  type        = bool
+  default     = true
+}
