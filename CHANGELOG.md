@@ -1,3 +1,10 @@
+# [2.4.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.3.0...v2.4.0) (2026-11-06)
+
+
+### Features
+
+* autoheal (terraform-docker-host v2.2.0), enable_autoheal default true ([cdc882e](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/cdc882e5f2fd3d6f83417d9d90fb58ac99db7892))
+
 # [2.3.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.2.0...v2.3.0) (2026-11-05)
 
 
