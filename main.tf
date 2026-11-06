@@ -7,6 +7,16 @@ locals {
 
   cloudwatch_enabled = var.enable_metrics
 
+  # Swap file on the root volume, created on first boot (idempotent). Cold pages (dockerd, agents, idle
+  # workers) move out so that a small instance rides out a peak instead of meeting the OOM killer.
+  swap_runcmd = join(" && ", [
+    "if [ ! -e /swapfile ]; then fallocate -l ${var.swap_size_gb}G /swapfile && chmod 600 /swapfile && mkswap /swapfile",
+    "echo '/swapfile none swap sw 0 0' >> /etc/fstab; fi",
+    "(swapon /swapfile || true)",
+    "echo 'vm.swappiness=${var.swappiness}' > /etc/sysctl.d/99-swap.conf",
+    "sysctl -q -p /etc/sysctl.d/99-swap.conf",
+  ])
+
   # Docker log driver: ship every container's stdout to CloudWatch Logs. Written before Docker
   # starts (cloud-init write_files runs ahead of runcmd), so no daemon restart is needed.
   docker_daemon_json = jsonencode({
@@ -93,6 +103,7 @@ module "docker_host" {
   enable_traefik_metrics = local.cloudwatch_enabled
   extra_write_files      = local.cloudwatch_enabled ? local.cloudwatch_write_files : []
   extra_compose_services = local.cloudwatch_enabled ? local.cloudwatch_agent_service : ""
+  extra_runcmd           = var.swap_size_gb > 0 ? [local.swap_runcmd] : []
 }
 
 resource "aws_security_group" "main" {

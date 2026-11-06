@@ -200,3 +200,15 @@ variable "enable_autoheal" {
   type        = bool
   default     = true
 }
+
+variable "swap_size_gb" {
+  description = "Size in GB of a swap file on the root volume, created at first boot. 0 disables it. Only a new instance gets it (user_data is not re-applied to an existing one)."
+  type        = number
+  default     = 2
+}
+
+variable "swappiness" {
+  description = "vm.swappiness when swap_size_gb is set. A low value keeps the hot working set in RAM and moves only cold pages out."
+  type        = number
+  default     = 20
+}
