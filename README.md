@@ -124,6 +124,8 @@ module "docker_host" {
 | <a name="input_ssh_ip_range"></a> [ssh\_ip\_range](#input\_ssh\_ip\_range) | CIDR allowed SSH access | `string` | n/a | yes |
 | <a name="input_ssh_public_keys"></a> [ssh\_public\_keys](#input\_ssh\_public\_keys) | List of SSH public keys added to the ubuntu user's authorized\_keys on the EC2 instance. | `list(string)` | `[]` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | n/a | `string` | n/a | yes |
+| <a name="input_swap_size_gb"></a> [swap\_size\_gb](#input\_swap\_size\_gb) | Size in GB of a swap file on the root volume, created at first boot. 0 disables it. Only a new instance gets it (user\_data is not re-applied to an existing one). | `number` | `2` | no |
+| <a name="input_swappiness"></a> [swappiness](#input\_swappiness) | vm.swappiness when swap\_size\_gb is set. A low value keeps the hot working set in RAM and moves only cold pages out. | `number` | `20` | no |
 | <a name="input_use_spot"></a> [use\_spot](#input\_use\_spot) | Use EC2 Spot instance (persistent, stop on interruption). Reduces cost ~70% for dev environments. | `bool` | `false` | no |
 | <a name="input_walg_backup_retention_days"></a> [walg\_backup\_retention\_days](#input\_walg\_backup\_retention\_days) | Number of days to retain WAL-G backups in S3 before automatic deletion. | `number` | `30` | no |
 | <a name="input_walg_bucket_versioning"></a> [walg\_bucket\_versioning](#input\_walg\_bucket\_versioning) | Keep object versions in the WAL-G bucket, so an overwritten or deleted backup/WAL object can be recovered for walg\_noncurrent\_version\_retention\_days. | `bool` | `true` | no |
