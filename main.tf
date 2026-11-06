@@ -59,7 +59,7 @@ locals {
 }
 
 module "docker_host" {
-  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=v2.1.0"
+  source = "git::https://github.com/miquido/terraform-docker-host.git?ref=v2.2.0"
 
   vm_user      = "ubuntu"
   block_device = "/dev/xvdf"
@@ -82,6 +82,7 @@ module "docker_host" {
   registry_password           = local.registry_password
   use_ecr_credential_helper   = var.ecr_registry_url != ""
   docker_prune_schedule       = var.docker_prune_schedule
+  enable_autoheal             = var.enable_autoheal
   ssh_public_keys             = var.ssh_public_keys
   walg_env_vars = {
     AWS_REGION              = var.region

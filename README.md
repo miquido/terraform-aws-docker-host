@@ -54,7 +54,7 @@ module "docker_host" {
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_docker_host"></a> [docker\_host](#module\_docker\_host) | git::https://github.com/miquido/terraform-docker-host.git | v2.1.0 |
+| <a name="module_docker_host"></a> [docker\_host](#module\_docker\_host) | git::https://github.com/miquido/terraform-docker-host.git | v2.2.0 |
 
 ## Resources
 
@@ -103,6 +103,7 @@ module "docker_host" {
 | <a name="input_ebs_snapshot_retention_count"></a> [ebs\_snapshot\_retention\_count](#input\_ebs\_snapshot\_retention\_count) | Number of daily data volume snapshots to keep. | `number` | `14` | no |
 | <a name="input_ebs_snapshot_time"></a> [ebs\_snapshot\_time](#input\_ebs\_snapshot\_time) | UTC time (HH:MM) of the daily data volume snapshot. | `string` | `"23:45"` | no |
 | <a name="input_ecr_registry_url"></a> [ecr\_registry\_url](#input\_ecr\_registry\_url) | ECR registry URL (e.g. 123456789.dkr.ecr.us-east-1.amazonaws.com). Leave empty to skip ECR setup. | `string` | `""` | no |
+| <a name="input_enable_autoheal"></a> [enable\_autoheal](#input\_enable\_autoheal) | Run willfarrell/autoheal (multi-arch, runs on Graviton), which restarts containers that Docker reports as `unhealthy`. Opt-in per container: only those with the label `autoheal=true` and a HEALTHCHECK are touched, so enabling it changes nothing until a project labels a container. It mounts the Docker socket, like the runner. | `bool` | `true` | no |
 | <a name="input_enable_ebs_snapshots"></a> [enable\_ebs\_snapshots](#input\_enable\_ebs\_snapshots) | Take daily EBS snapshots of the data volume with Data Lifecycle Manager. | `bool` | `true` | no |
 | <a name="input_enable_metrics"></a> [enable\_metrics](#input\_enable\_metrics) | Ship Docker logs to CloudWatch Logs (awslogs driver) and Traefik metrics through the CloudWatch Agent. | `bool` | `true` | no |
 | <a name="input_enable_registry"></a> [enable\_registry](#input\_enable\_registry) | Run a docker registry on the host (registry.<domain>) instead of ECR, protected with basic auth. Credentials are generated unless registry\_username/registry\_password/registry\_htpasswd are given; read them from the registry\_* outputs. | `bool` | `false` | no |
