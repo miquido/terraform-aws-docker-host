@@ -1,3 +1,10 @@
+# [2.6.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.5.0...v2.6.0) (2026-11-09)
+
+
+### Features
+
+* optional one-way replication of the WAL-G bucket to a backup account ([49cbfe9](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/49cbfe94f869da01bd2be7fc96910003d0c4656d))
+
 # [2.5.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.4.0...v2.5.0) (2026-11-06)
 
 
