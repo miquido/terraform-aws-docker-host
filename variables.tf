@@ -212,3 +212,14 @@ variable "swappiness" {
   type        = number
   default     = 20
 }
+
+variable "walg_replication_destination_bucket_arn" {
+  description = "ARN of a bucket (normally in a dedicated backup account) to replicate the WAL-G bucket into, one-way and without deletions. The destination must be versioned and its policy must accept the role named <project>-<environment>-walg-replication (output walg_replication_role_arn). null disables replication."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.walg_replication_destination_bucket_arn == null || can(regex("^arn:aws[a-z-]*:s3:::[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$", var.walg_replication_destination_bucket_arn))
+    error_message = "walg_replication_destination_bucket_arn must be a bucket ARN like arn:aws:s3:::my-bucket."
+  }
+}
