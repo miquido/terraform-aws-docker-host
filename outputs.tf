@@ -33,3 +33,8 @@ output "data_volume_id" {
   description = "ID of the EBS data volume"
   value       = aws_ebs_volume.data.id
 }
+
+output "walg_replication_role_arn" {
+  description = "ARN of the role that replicates the WAL-G bucket (null when replication is off); the destination bucket must allow it"
+  value       = one(aws_iam_role.walg_replication[*].arn)
+}

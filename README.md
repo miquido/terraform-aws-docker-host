@@ -69,11 +69,13 @@ module "docker_host" {
 | [aws_iam_instance_profile.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_role.dlm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role.instance](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role.walg_replication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.dlm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.ecr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.route53_acme](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.walg_replication](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy_attachment.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_instance.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
 | [aws_route53_record.apex](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
@@ -81,6 +83,7 @@ module "docker_host" {
 | [aws_s3_bucket.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_lifecycle_configuration.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
 | [aws_s3_bucket_public_access_block.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_replication_configuration.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_replication_configuration) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.walg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 | [aws_security_group.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
@@ -130,6 +133,7 @@ module "docker_host" {
 | <a name="input_walg_backup_retention_days"></a> [walg\_backup\_retention\_days](#input\_walg\_backup\_retention\_days) | Number of days to retain WAL-G backups in S3 before automatic deletion. | `number` | `30` | no |
 | <a name="input_walg_bucket_versioning"></a> [walg\_bucket\_versioning](#input\_walg\_bucket\_versioning) | Keep object versions in the WAL-G bucket, so an overwritten or deleted backup/WAL object can be recovered for walg\_noncurrent\_version\_retention\_days. | `bool` | `true` | no |
 | <a name="input_walg_noncurrent_version_retention_days"></a> [walg\_noncurrent\_version\_retention\_days](#input\_walg\_noncurrent\_version\_retention\_days) | Days to keep noncurrent versions (overwritten or deleted objects) of the WAL-G bucket. Only has an effect with walg\_bucket\_versioning. | `number` | `14` | no |
+| <a name="input_walg_replication_destination_bucket_arn"></a> [walg\_replication\_destination\_bucket\_arn](#input\_walg\_replication\_destination\_bucket\_arn) | ARN of a bucket (normally in a dedicated backup account) to replicate the WAL-G bucket into, one-way and without deletions. The destination must be versioned and its policy must accept the role named <project>-<environment>-walg-replication (output walg\_replication\_role\_arn). null disables replication. | `string` | `null` | no |
 
 ## Outputs
 
@@ -142,6 +146,7 @@ module "docker_host" {
 | <a name="output_registry_url"></a> [registry\_url](#output\_registry\_url) | Hostname of the built-in registry (empty when enable\_registry is false) |
 | <a name="output_registry_username"></a> [registry\_username](#output\_registry\_username) | User of the built-in registry |
 | <a name="output_walg_backup_bucket"></a> [walg\_backup\_bucket](#output\_walg\_backup\_bucket) | S3 bucket name for WAL-G backups |
+| <a name="output_walg_replication_role_arn"></a> [walg\_replication\_role\_arn](#output\_walg\_replication\_role\_arn) | ARN of the role that replicates the WAL-G bucket (null when replication is off); the destination bucket must allow it |
 <!-- END_TF_DOCS -->
 
 ## License
