@@ -1,3 +1,10 @@
+## [2.6.1](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.6.0...v2.6.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* bump terraform-docker-host to v2.2.2 ([347e99d](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/347e99ddf8802091a32416193366c11e2c95444f))
+
 # [2.6.0](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.5.0...v2.6.0) (2026-11-09)
 
 
