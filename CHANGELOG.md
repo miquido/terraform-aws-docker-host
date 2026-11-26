@@ -1,3 +1,10 @@
+## [2.6.2](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.6.1...v2.6.2) (2026-11-26)
+
+
+### Bug Fixes
+
+* docker-compose-runner v1.5.0 by default (rolls a failed deploy back to the last good one) ([23b850a](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/commit/23b850ac36cbd958dd36eaddd0411cbea739720f))
+
 ## [2.6.1](https://gitlab.miquido.com/miquido/terraform/aws-docker-host/compare/v2.6.0...v2.6.1) (2026-11-16)
 
 
